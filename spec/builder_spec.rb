@@ -1,3 +1,25 @@
+#  Copyright (c) 2016 Phusion Holding B.V.
+#
+#  "Union Station" and "Passenger" are trademarks of Phusion Holding B.V.
+#
+#  Permission is hereby granted, free of charge, to any person obtaining a copy
+#  of this software and associated documentation files (the "Software"), to deal
+#  in the Software without restriction, including without limitation the rights
+#  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#  copies of the Software, and to permit persons to whom the Software is
+#  furnished to do so, subject to the following conditions:
+#
+#  The above copyright notice and this permission notice shall be included in
+#  all copies or substantial portions of the Software.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+#  THE SOFTWARE.
+
 require_relative '../lib/cxxcodebuilder/builder'
 
 module CxxCodeBuilder
@@ -5,6 +27,38 @@ module CxxCodeBuilder
 describe Builder do
   it 'is initially empty' do
     expect(Builder.new.to_s).to eq('')
+  end
+
+  specify 'test indent' do
+    builder = Builder.new do
+      add_code 'foo();'
+      indent do
+        add_code 'bar();'
+      end
+    end
+
+    expect(builder.to_s).to eq(
+      "foo();\n" \
+      "\tbar();\n"
+    )
+  end
+
+  specify 'test separator' do
+    builder = Builder.new do
+      add_code 'foo();'
+      indent do
+        add_code 'bar();'
+        separator
+        add_code 'baz();'
+      end
+    end
+
+    expect(builder.to_s).to eq(
+      "foo();\n" \
+      "\tbar();\n" \
+      "\n" \
+      "\tbaz();\n"
+    )
   end
 
   specify 'test includes' do
@@ -113,7 +167,7 @@ describe Builder do
         element 1
         element 2
         element 3
-        string "hello\tworld"
+        string_element "hello\tworld"
       end
     end
 
@@ -132,11 +186,12 @@ describe Builder do
       struct_initializer do
         element 1
         element 2
-        string "hello\tworld"
-        array_initializer do
+        string_element "hello\tworld"
+        array_initializer_element do
           element 3
           element 4
         end
+        element 5
       end
     end
 
@@ -148,7 +203,8 @@ describe Builder do
       "\t[\n" \
       "\t\t3,\n" \
       "\t\t4\n" \
-      "\t]\n" \
+      "\t],\n" \
+      "\t5\n" \
       "}\n"
     )
   end

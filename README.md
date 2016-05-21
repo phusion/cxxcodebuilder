@@ -94,3 +94,5 @@ puts(builder)
 ~~~
 
 ## API
+
+See the comments in lib/cxxcodebuilder/builder.rb for the full API.
