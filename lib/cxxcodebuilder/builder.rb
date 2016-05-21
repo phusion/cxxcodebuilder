@@ -2,7 +2,7 @@
 
 require File.expand_path(File.dirname(__FILE__) + '/initializer_builder')
 
-module CSyntaxBuilder
+module CxxCodeBuilder
   class Builder
     def initialize(&block)
       @indent_level = 0

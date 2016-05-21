@@ -1,6 +1,6 @@
-require_relative '../lib/csyntax-builder/builder'
+require_relative '../lib/cxxcodebuilder/builder'
 
-module CSyntaxBuilder
+module CxxCodeBuilder
 
 describe Builder do
   it 'is initially empty' do

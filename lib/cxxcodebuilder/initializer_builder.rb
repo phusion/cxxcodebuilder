@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-module CSyntaxBuilder
+module CxxCodeBuilder
   # Builds array and struct initialization syntaxes.
   class InitializerBuilder
     def initialize(builder, start_character, end_character)
