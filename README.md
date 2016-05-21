@@ -4,7 +4,7 @@ Cxxcodebuilder gives you a simple Ruby API for programmatically outputting C/C++
 
 ## Use cases
 
-This library is useful in build systems for automatically generating C/C++ code.
+This library is useful in build systems for automatically generating C/C++ code. It is much cleaner compared to using ERB or other generic text templating systems for the job.
 
 ## Example
 
