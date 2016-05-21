@@ -30,6 +30,9 @@ module CxxCodeBuilder
       @elements << subbuilder
     end
 
+    alias array_element array_initializer
+    alias struct_element struct_initializer
+
     # @private
     def write_code_without_newline
       @builder.add_code(@start_character)

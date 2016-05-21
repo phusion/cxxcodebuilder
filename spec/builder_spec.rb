@@ -7,9 +7,49 @@ describe Builder do
     expect(Builder.new.to_s).to eq('')
   end
 
+  specify 'test includes' do
+    builder = Builder.new do
+      include '<stdio.h>'
+    end
+
+    expect(builder.to_s).to eq(
+      "#include <stdio.h>\n"
+    )
+  end
+
+  specify 'test comments' do
+    builder = Builder.new do
+      comment %q{
+        hello
+        world
+      }
+    end
+
+    expect(builder.to_s).to eq(
+      "/*\n" \
+      " * hello\n" \
+      " * world\n" \
+      " */\n"
+    )
+  end
+
+  specify 'test structs' do
+    builder = Builder.new do
+      struct 'Foo' do
+        member 'unsigned int bar'
+      end
+    end
+
+    expect(builder.to_s).to eq(
+      "struct Foo {\n" \
+      "\tunsigned int bar;\n" \
+      "};\n"
+    )
+  end
+
   specify 'test functions with string body' do
     builder = Builder.new do
-      function('void', 'hello(int a)', %q{
+      function('void hello(int a)', %q{
         int i = 1 + 2 + a + global;
         printf("hello world!\n");
       })
@@ -27,7 +67,7 @@ describe Builder do
 
   specify 'test functions with block body' do
     builder = Builder.new do
-      function('void', 'hello(int a)') do
+      function('void hello(int a)') do
         add_code 'int x = 1 + a;'
       end
     end
@@ -43,12 +83,27 @@ describe Builder do
 
   specify 'test fields' do
     builder = Builder.new do
-      field 'static int', 'global'
+      field 'static int a'
+      field 'static int b', 123
+      field 'static int c', '456'
+      field 'static int d', str_val('hello world')
+      field 'static int e' do
+        array_initializer do
+          element 1
+          element 2
+        end
+      end
     end
 
     expect(builder.to_s).to eq(
-      "static int global;\n" \
-      "\n"
+      "static int a;\n" \
+      "static int b = 123;\n" \
+      "static int c = 456;\n" \
+      "static int d = \"hello world\";\n" \
+      "static int e = [\n" \
+      "\t1,\n" \
+      "\t2\n" \
+      "];\n"
     )
   end
 
@@ -100,9 +155,11 @@ describe Builder do
 
   specify 'test multiple elements' do
     builder = Builder.new do
-      field 'static int', 'global'
+      field 'static int global'
 
-      function('void', 'hello(int a)', %q{
+      separator
+
+      function('void hello(int a)', %q{
         abort();
       })
     end

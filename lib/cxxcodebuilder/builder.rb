@@ -43,26 +43,72 @@ module CxxCodeBuilder
       @code << "\n"
     end
 
-    def function(return_type_and_attributes, name_and_params, body = nil)
-      add_code return_type_and_attributes
-      add_code "#{name_and_params} {"
+    def include(header_name)
+      add_code("#include #{header_name}")
+    end
+
+    def comment(text)
+      add_code '/*'
+      prefix = "\t" * @indent_level
+      prefix << ' * '
+      @code << reindent(unindent(text.to_s), prefix)
+      @code << "\n"
+      add_code_without_newline '-'
+      @code.gsub!(/-\Z/, ' ')
+      add_raw_code "*/\n"
+    end
+
+    def struct(name)
+      add_code "struct #{name} {"
       indent do
-        if body
-          add_code body
-        else
+        yield
+      end
+      add_code '};'
+    end
+
+    def typedef_struct(name)
+      add_code 'typedef struct {'
+      indent do
+        yield
+      end
+      add_code "} #{name};"
+    end
+
+    def function(declaration, body = nil)
+      declaration =~ /(.*?)([a-z0-9_]+)[\s\t\n]*\((.*)/mi
+      return_type_and_attributes = $1
+      name_and_params = "#{$2}(#{$3}"
+
+      add_code return_type_and_attributes.strip
+      add_code "#{name_and_params.strip} {"
+      indent do
+        if block_given?
           yield
+        else
+          add_code body
         end
       end
       add_code '}'
       separator
     end
 
-    def field(type_and_attributes, name)
-      add_code "#{type_and_attributes} #{name};"
-      separator
+    def field(declaration, value = nil)
+      if block_given?
+        add_code_without_newline "#{declaration} ="
+        add_raw_code ' '
+        yield
+        @code.gsub!(/\n*\Z/m, '')
+        add_raw_code ';'
+        newline
+      elsif value
+        add_code "#{declaration} = #{value};"
+      else
+        add_code "#{declaration};"
+      end
     end
 
     alias variable field
+    alias member field
 
     def array_initializer(&block)
       subbuilder = InitializerBuilder.new(self, '[', ']')
@@ -76,6 +122,10 @@ module CxxCodeBuilder
       subbuilder.instance_eval(&block)
       subbuilder.write_code_without_newline
       newline
+    end
+
+    def str_val(str)
+      str.to_s.inspect
     end
 
     def to_s
