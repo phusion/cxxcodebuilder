@@ -60,11 +60,11 @@ builder = CxxCodeBuilder::Builder.new do
   field 'static Foo foo[]' do
     array_initializer do
       struct_element do
-        string 'hello'
+        string_element 'hello'
         element 1
       end
       struct_element do
-        string 'world'
+        string_element 'world'
         element 2
       end
     end
