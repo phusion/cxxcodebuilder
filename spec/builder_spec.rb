@@ -71,6 +71,22 @@ describe Builder do
     )
   end
 
+  specify 'test defines' do
+    builder = Builder.new do
+      define 'HAVE_STDINT_H'
+      define 'FOO bar'
+      define 'TWO 1 + 2'
+      define_string 'NAME', 'Joe Dalton'
+    end
+
+    expect(builder.to_s).to eq(
+      "#define HAVE_STDINT_H\n" \
+      "#define FOO bar\n" \
+      "#define TWO 1 + 2\n" \
+      "#define NAME \"Joe Dalton\"\n"
+    )
+  end
+
   specify 'test comments' do
     builder = Builder.new do
       comment %q{

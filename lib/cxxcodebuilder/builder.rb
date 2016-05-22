@@ -142,7 +142,7 @@ module CxxCodeBuilder
     alias newline separator
 
     # Adds an `#include` statement to the internal buffer.
-    # `header_name` is verbatim passed to the statement, so you
+    # `header_name` is verbatim added to the statement, so you
     # need to pass either `"<header_name.h>"` or `'"header_name.h"'`
     # as argument.
     #
@@ -157,6 +157,40 @@ module CxxCodeBuilder
     #   #include "Config.h"
     def include(header_name)
       add_code("#include #{header_name}")
+    end
+
+    # Adds a `#define` statement to the internal buffer.
+    # `macro` is verbatim added to the statement. If you want
+    # to #define a string constant then you should use the
+    # `#define_string` method.
+    #
+    # Example:
+    #
+    #   define 'HAVE_STDINT_H'
+    #   define 'FOO bar'
+    #   define 'TWO 1 + 2'
+    #
+    # Output:
+    #
+    #   #define HAVE_STDINT_H
+    #   #define FOO bar
+    #   #define TWO 1 + 2
+    def define(macro)
+      add_code("#define #{macro}")
+    end
+
+    # Adds a `#define` statement to the internal buffer for defining
+    # a string macro.
+    #
+    # Example:
+    #
+    #   define 'NAME', 'Joe Dalton'
+    #
+    # Output:
+    #
+    #   #define NAME "Joe Dalton"
+    def define_string(name, value)
+      define("#{name} #{str_val(value)}")
     end
 
     # Adds a comment to the internal buffer. Before adding to the internal
