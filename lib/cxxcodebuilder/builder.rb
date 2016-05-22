@@ -544,6 +544,7 @@ module CxxCodeBuilder
     def reindent(str, indent_string)
       str = unindent(str)
       str.gsub!(/^/, indent_string)
+      str.gsub!(/\s+$/, '')
       str
     end
   end

@@ -120,6 +120,24 @@ describe Builder do
     )
   end
 
+  specify 'empty comment lines do not have trailing whitespaces' do
+    builder = Builder.new do
+      comment %q{
+        hello
+
+        world
+      }
+    end
+
+    expect(builder.to_s).to eq(
+      "/*\n" \
+      " * hello\n" \
+      " *\n" \
+      " * world\n" \
+      " */\n"
+    )
+  end
+
   specify 'test structs' do
     builder = Builder.new do
       struct 'Foo' do
