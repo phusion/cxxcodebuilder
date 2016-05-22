@@ -268,7 +268,7 @@ describe Builder do
       "\t2,\n" \
       "\t3,\n" \
       "\t\"hello\\tworld\"\n" \
-      "]\n"
+      "]"
     )
   end
 
@@ -296,7 +296,7 @@ describe Builder do
       "\t\t4\n" \
       "\t],\n" \
       "\t5\n" \
-      "}\n"
+      "}"
     )
   end
 

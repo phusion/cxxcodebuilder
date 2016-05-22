@@ -448,6 +448,8 @@ module CxxCodeBuilder
     # initializer_builder.rb for an example and to learn what API methods
     # are available.
     #
+    # Does not add a trailing newline.
+    #
     # Example:
     #
     #     array_initializer do
@@ -478,7 +480,6 @@ module CxxCodeBuilder
       subbuilder = InitializerBuilder.new(self, '[', ']')
       subbuilder.instance_eval(&block)
       subbuilder.write_code_without_newline
-      newline
     end
 
     # Adds a struct initializer (in the form of `{x, y, z}`) to the internal
@@ -487,6 +488,8 @@ module CxxCodeBuilder
     # InitializerBuilder API methods instead. See the comments in
     # initializer_builder.rb for an example and to learn what API methods
     # are available.
+    #
+    # Does not add a trailing newline.
     #
     # Example:
     #
@@ -518,7 +521,6 @@ module CxxCodeBuilder
       subbuilder = InitializerBuilder.new(self, '{', '}')
       subbuilder.instance_eval(&block)
       subbuilder.write_code_without_newline
-      newline
     end
 
     # Returns (and does not modify the internal buffer!) a C string representation
