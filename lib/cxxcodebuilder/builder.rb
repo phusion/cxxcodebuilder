@@ -54,12 +54,21 @@ module CxxCodeBuilder
   # method. Builder generates tabs for indentation.
   class Builder
     def initialize(&block)
+      @indent_string = "\t"
       @indent_level = 0
       @code = ""
 
       if block
         instance_eval(&block)
       end
+    end
+
+    # Customizes the indentation string. The default is a tab,
+    # but you can use this to set it to e.g. 4 spaces. You should
+    # call this method as early as possible because it won't
+    # affect the indentation of already generated code.
+    def set_indent_string(str)
+      @indent_string = str
     end
 
     # Adds some code to the internal buffer. Before adding to the internal
@@ -101,7 +110,7 @@ module CxxCodeBuilder
 
     # Like `#add_code`, but does not suffix the generated code with a newline.
     def add_code_without_newline(code)
-      @code << reindent(unindent(code.to_s), "\t" * @indent_level, true)
+      @code << reindent(unindent(code.to_s), @indent_string * @indent_level, true)
     end
 
     # Adds some raw code to the internal buffer. Unlike `#add_code`, no
@@ -244,7 +253,7 @@ module CxxCodeBuilder
     #    */
     def comment(text)
       add_code '/*'
-      prefix = "\t" * @indent_level
+      prefix = @indent_string * @indent_level
       prefix << ' * '
       @code << reindent(unindent(text.to_s), prefix, false)
       @code << "\n"
@@ -543,15 +552,22 @@ module CxxCodeBuilder
       str
     end
 
-    def reindent(str, indent_string, convert_ruby_indentation)
+    def reindent(str, prefix, convert_ruby_indentation)
       str = unindent(str)
+
+      # Convert Ruby two-space indentation to our own indentation format
       if convert_ruby_indentation
         str.gsub!(/^(  )+/) do |match|
-          "\t" * (match.size / 2)
+          @indent_string * (match.size / 2)
         end
       end
-      str.gsub!(/^/, indent_string)
+
+      # Prepend supplied prefix to each line
+      str.gsub!(/^/, prefix)
+
+      # Remove trailing whitespaces
       str.gsub!(/[ \t]+$/, '')
+
       str
     end
   end

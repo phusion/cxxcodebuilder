@@ -337,6 +337,21 @@ describe Builder do
       "\n"
     )
   end
+
+  it 'allows customizing the indentation' do
+    builder = Builder.new do
+      set_indent_string '    '
+      field 'int foo'
+      indent do
+        field 'int bar'
+      end
+    end
+
+    expect(builder.to_s).to eq(
+      "int foo;\n" \
+      "    int bar;\n"
+    )
+  end
 end
 
 end
