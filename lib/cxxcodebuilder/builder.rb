@@ -551,7 +551,7 @@ module CxxCodeBuilder
         end
       end
       str.gsub!(/^/, indent_string)
-      str.gsub!(/\s+$/, '')
+      str.gsub!(/[ \t]+$/, '')
       str
     end
   end

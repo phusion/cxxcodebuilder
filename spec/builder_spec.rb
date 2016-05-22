@@ -67,6 +67,22 @@ describe Builder do
     )
   end
 
+  it 'preserves empty lines' do
+    builder = Builder.new do
+      add_code %q{
+        hello();
+
+        world();
+      }
+    end
+
+    expect(builder.to_s).to eq(
+      "hello();\n" \
+      "\n" \
+      "world();\n"
+    )
+  end
+
   specify 'test separator' do
     builder = Builder.new do
       add_code 'foo();'
