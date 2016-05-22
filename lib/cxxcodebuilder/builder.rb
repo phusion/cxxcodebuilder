@@ -193,6 +193,32 @@ module CxxCodeBuilder
       define("#{name} #{str_val(value)}")
     end
 
+    # Adds header guard macros to the internal buffer. Expects
+    # a block which generates the code to insert inside the guard.
+    #
+    # Example:
+    #
+    #   guard_macros 'MY_HEADER_H' do
+    #     field 'int foo'
+    #   end
+    #
+    # Output:
+    #
+    #   #ifndef MY_HEADER_H
+    #   #define MY_HEADER_H
+    #
+    #   int foo;
+    #
+    #   #endif /* MY_HEADER_H */
+    def guard_macros(name)
+      add_code("#ifndef #{name}")
+      define(name)
+      separator
+      yield
+      separator
+      add_code("#endif /* #{name} */")
+    end
+
     # Adds a comment to the internal buffer. Before adding to the internal
     # buffer, extraneous indentation and leading and trailing empty lines in
     # `text` are removed, and new indentation is added based on the current

@@ -87,6 +87,23 @@ describe Builder do
     )
   end
 
+  specify 'test guard macros' do
+    builder = Builder.new do
+      guard_macros 'MY_HEADER_H' do
+        field 'int foo'
+      end
+    end
+
+    expect(builder.to_s).to eq(
+      "#ifndef MY_HEADER_H\n" \
+      "#define MY_HEADER_H\n" \
+      "\n" \
+      "int foo;\n" \
+      "\n" \
+      "#endif /* MY_HEADER_H */\n"
+    )
+  end
+
   specify 'test comments' do
     builder = Builder.new do
       comment %q{
