@@ -43,6 +43,30 @@ describe Builder do
     )
   end
 
+  it 'changes two-space Ruby indenting into our own indenting' do
+    builder = Builder.new do
+      indent do
+        add_code %q{
+          if (true) {
+            foo();
+            if (true) {
+              bar();
+            }
+          }
+        }
+      end
+    end
+
+    expect(builder.to_s).to eq(
+      "\tif (true) {\n" \
+      "\t\tfoo();\n" \
+      "\t\tif (true) {\n" \
+      "\t\t\tbar();\n" \
+      "\t\t}\n" \
+      "\t}\n"
+    )
+  end
+
   specify 'test separator' do
     builder = Builder.new do
       add_code 'foo();'
@@ -134,6 +158,22 @@ describe Builder do
       " * hello\n" \
       " *\n" \
       " * world\n" \
+      " */\n"
+    )
+  end
+
+  specify 'Ruby two-line indenting are not converted to tabs' do
+    builder = Builder.new do
+      comment %q{
+        hello
+          world
+      }
+    end
+
+    expect(builder.to_s).to eq(
+      "/*\n" \
+      " * hello\n" \
+      " *   world\n" \
       " */\n"
     )
   end

@@ -101,7 +101,7 @@ module CxxCodeBuilder
 
     # Like `#add_code`, but does not suffix the generated code with a newline.
     def add_code_without_newline(code)
-      @code << reindent(unindent(code.to_s), "\t" * @indent_level)
+      @code << reindent(unindent(code.to_s), "\t" * @indent_level, true)
     end
 
     # Adds some raw code to the internal buffer. Unlike `#add_code`, no
@@ -246,7 +246,7 @@ module CxxCodeBuilder
       add_code '/*'
       prefix = "\t" * @indent_level
       prefix << ' * '
-      @code << reindent(unindent(text.to_s), prefix)
+      @code << reindent(unindent(text.to_s), prefix, false)
       @code << "\n"
       add_code_without_newline '-'
       @code.gsub!(/-\Z/, ' ')
@@ -541,8 +541,13 @@ module CxxCodeBuilder
       str
     end
 
-    def reindent(str, indent_string)
+    def reindent(str, indent_string, convert_ruby_indentation)
       str = unindent(str)
+      if convert_ruby_indentation
+        str.gsub!(/^(  )+/) do |match|
+          "\t" * (match.size / 2)
+        end
+      end
       str.gsub!(/^/, indent_string)
       str.gsub!(/\s+$/, '')
       str
