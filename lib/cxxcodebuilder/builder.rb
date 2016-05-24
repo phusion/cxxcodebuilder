@@ -358,9 +358,9 @@ module CxxCodeBuilder
     #       printf("x = %d\n", x);
     #   }
     def function(declaration, body = nil)
-      declaration =~ /(.*?)([a-z0-9_]+)[\s\t\n]*\((.*)/mi
+      declaration =~ /(.*?)([a-z0-9_:]+)\s*\((.*)\s*(const)?/mi
       return_type_and_attributes = $1
-      name_and_params = "#{$2}(#{$3}"
+      name_and_params = "#{$2}(#{$3} #{$4}".strip
 
       add_code return_type_and_attributes.strip
       add_code "#{name_and_params.strip} {"

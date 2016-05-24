@@ -242,6 +242,32 @@ describe Builder do
     )
   end
 
+  it 'recognizes C++ namespaced functions' do
+    builder = Builder.new do
+      function('void Foo::bar()', '')
+    end
+
+    expect(builder.to_s).to eq(
+      "void\n" \
+      "Foo::bar() {\n" \
+      "\n" \
+      "}\n\n"
+    )
+  end
+
+  it 'recognizes C++ const functions' do
+    builder = Builder.new do
+      function('void Foo::bar() const', '')
+    end
+
+    expect(builder.to_s).to eq(
+      "void\n" \
+      "Foo::bar() const {\n" \
+      "\n" \
+      "}\n\n"
+    )
+  end
+
   specify 'test fields' do
     builder = Builder.new do
       field 'static int a'
