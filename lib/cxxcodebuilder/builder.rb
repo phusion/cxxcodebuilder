@@ -251,10 +251,13 @@ module CxxCodeBuilder
     #    * foo
     #    * bar
     #    */
-    def comment(text)
+    def comment(text, indent_level = 0)
       add_code '/*'
       prefix = @indent_string * @indent_level
       prefix << ' * '
+      if indent_level > 0
+        prefix << ' ' * indent_level
+      end
       @code << reindent(unindent(text.to_s), prefix, false)
       @code << "\n"
       add_code_without_newline '-'
