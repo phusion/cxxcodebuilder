@@ -268,6 +268,28 @@ describe Builder do
     )
   end
 
+  specify 'test C++ constructor member initializers' do
+    builder = Builder.new do
+      initializers = {
+        'foo' => '1',
+        'bar' => '2',
+        'baz' => '"test"'
+      }
+      constructor('void Foo::Foo()', initializers, '')
+    end
+
+    expect(builder.to_s).to eq(
+      "void\n" \
+      "Foo::Foo()\n" \
+      "\t: foo(1),\n" \
+      "\t  bar(2),\n" \
+      "\t  baz(\"test\")\n" \
+      "{\n" \
+      "\n" \
+      "}\n\n"
+    )
+  end
+
   specify 'test fields' do
     builder = Builder.new do
       field 'static int a'

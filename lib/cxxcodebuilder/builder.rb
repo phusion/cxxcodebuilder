@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-#  Copyright (c) 2016 Phusion Holding B.V.
+#  Copyright (c) 2016-2018 Phusion Holding B.V.
 #
 #  "Union Station" and "Passenger" are trademarks of Phusion Holding B.V.
 #
@@ -360,13 +360,66 @@ module CxxCodeBuilder
     #   bar(int x) {
     #       printf("x = %d\n", x);
     #   }
-    def function(declaration, body = nil)
+    def function(declaration, body = nil, &block)
+      function_or_constructor(declaration, nil, body, &block)
+    end
+
+    # Adds a C++ constructor definition to the internal buffer. This is
+    # like #function, but also allows defining member initializers.
+    # `member_initializers` is a Hash which maps field names to their
+    # initialization expressions.
+    #
+    # Example:
+    #
+    #   member_initializers = {
+    #     'name' => '"Delorean"',
+    #     'color' => 'COLOR_RED'
+    #   }
+    #   constructor('Car::Car()', member_initializers) do
+    #     add_code 'printf("Created a car\n");'
+    #   end
+    #
+    # Output:
+    #
+    #   Car::Car()
+    #       : name("Delorean"),
+    #         color(COLOR_RED)
+    #   {
+    #       printf("Created a car\n");
+    #   }
+    def constructor(declaration, member_initializers, body = nil, &block)
+      function_or_constructor(declaration, member_initializers, body, &block)
+    end
+
+    def function_or_constructor(declaration, member_initializers, body = nil)
       declaration =~ /(.*?)([a-z0-9_:]+)\s*\((.*)\s*(const)?/mi
       return_type_and_attributes = $1
       name_and_params = "#{$2}(#{$3} #{$4}".strip
 
       add_code return_type_and_attributes.strip
-      add_code "#{name_and_params.strip} {"
+      if member_initializers && !member_initializers.empty?
+        add_code "#{name_and_params.strip}"
+        indent do
+          member_initializers.each_with_index do |elem, i|
+            field, expr = elem
+            if i == 0
+              prefix = @indent_string * @indent_level + ': '
+            else
+              prefix = @indent_string * @indent_level + '  '
+            end
+            if i == member_initializers.size - 1
+              suffix = nil
+            else
+              suffix = ','
+            end
+            add_raw_code("#{prefix}#{field}(#{expr})#{suffix}\n")
+          end
+        end
+        add_code '{'
+      else
+        add_code "#{name_and_params.strip} {"
+      end
+
       indent do
         if block_given?
           yield
