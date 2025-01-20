@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-#  Copyright (c) 2016-2025 Asynchronous Holding B.V.
+#  Copyright (c) 2016-2025 Asynchronous B.V.
 #
-#  "Union Station" and "Passenger" are trademarks of Asynchronous Holding B.V.
+#  "Union Station" and "Passenger" are trademarks of Asynchronous B.V.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
