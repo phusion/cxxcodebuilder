@@ -56,7 +56,7 @@ module CxxCodeBuilder
     def initialize(&block)
       @indent_string = "\t"
       @indent_level = 0
-      @code = ""
+      @code = String.new
 
       if block
         instance_eval(&block)
