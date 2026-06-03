@@ -603,7 +603,7 @@ module CxxCodeBuilder
       str = str.dup
       str.gsub!(/\A([\s\t]*\n)+/, '')
       str.gsub!(/[\s\t\n]+\Z/, '')
-      indent = str.split("\n").select{ |line| !line.strip.empty? }.map{ |line| line.index(/[^\s]/) }.compact.min || 0
+      indent = str.split("\n").select { |line| !line.strip.empty? }.map { |line| line.index(/[^\s]/) }.compact.min || 0
       str.gsub!(/^[[:blank:]]{#{indent}}/, '')
       str
     end

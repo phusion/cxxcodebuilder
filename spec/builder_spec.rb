@@ -146,10 +146,10 @@ describe Builder do
 
   specify 'test comments' do
     builder = Builder.new do
-      comment %q{
+      comment %q(
         hello
         world
-      }
+      )
     end
 
     expect(builder.to_s).to eq(
@@ -162,11 +162,11 @@ describe Builder do
 
   specify 'empty comment lines do not have trailing whitespaces' do
     builder = Builder.new do
-      comment %q{
+      comment %q(
         hello
 
         world
-      }
+      )
     end
 
     expect(builder.to_s).to eq(
@@ -180,10 +180,10 @@ describe Builder do
 
   specify 'Ruby two-line indenting are not converted to tabs' do
     builder = Builder.new do
-      comment %q{
+      comment %q(
         hello
           world
-      }
+      )
     end
 
     expect(builder.to_s).to eq(
@@ -273,7 +273,7 @@ describe Builder do
       initializers = {
         'foo' => '1',
         'bar' => '2',
-        'baz' => '"test"'
+        'baz' => '"test"',
       }
       constructor('void Foo::Foo()', initializers, '')
     end
