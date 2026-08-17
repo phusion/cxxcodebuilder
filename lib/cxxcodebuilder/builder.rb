@@ -25,6 +25,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/initializer_builder')
 
 module CxxCodeBuilder
+
   # Builds C/C++ code. Use it as follows:
   #
   #  1. Create a CxxCodeBuilder::Builder object.
@@ -627,4 +628,5 @@ module CxxCodeBuilder
       str
     end
   end
+
 end

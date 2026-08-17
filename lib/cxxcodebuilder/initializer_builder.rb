@@ -23,6 +23,7 @@
 #  THE SOFTWARE.
 
 module CxxCodeBuilder
+
   # Builds array and struct initialization code.
   class InitializerBuilder
     def initialize(builder, start_character, end_character)
@@ -163,4 +164,5 @@ module CxxCodeBuilder
       @builder.add_code_without_newline(@end_character)
     end
   end
+
 end
