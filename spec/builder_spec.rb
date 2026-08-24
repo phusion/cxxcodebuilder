@@ -1,4 +1,4 @@
-#  Copyright (c) 2016-2025 Asynchronous B.V.
+#  Copyright (c) 2016-2026 Asynchronous B.V.
 #
 #  "Union Station" and "Passenger" are trademarks of Asynchronous B.V.
 #
